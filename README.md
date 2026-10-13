@@ -14,6 +14,12 @@ npm start        # serves at http://localhost:8000
 npm test
 ```
 
+## Deploy
+
+Every push to `main` runs the tests and, if they pass, publishes the site to GitHub Pages via `.github/workflows/pages.yml`. Only `index.html` and `src/` are published.
+
+Live at: https://jptuason888.github.io/Test-app/
+
 ## Layout
 
 - `index.html` — page and styles
