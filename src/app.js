@@ -1,4 +1,4 @@
-import { ENTITIES, createExpense, totalsByEntity, grandTotal, formatPHP } from "./expenses.js";
+import { ENTITIES, createExpense, totalsByEntity, grandTotal, formatPHP, toCSV } from "./expenses.js";
 
 const STORAGE_KEY = "expense-tracker:v1";
 const form = document.querySelector("#expense-form");
@@ -48,7 +48,19 @@ function render() {
     })
   );
   if (!expenses.length) list.innerHTML = `<li class="empty">No expenses yet.</li>`;
+  exportButton.disabled = !expenses.length;
 }
+
+const exportButton = document.querySelector("#export");
+exportButton.addEventListener("click", () => {
+  // BOM so Excel opens the file as UTF-8 (accented names stay intact).
+  const blob = new Blob(["﻿" + toCSV(expenses)], { type: "text/csv;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `expenses-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+});
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
